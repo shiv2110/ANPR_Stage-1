@@ -39,7 +39,6 @@ from tensorflow.keras.models import model_from_json
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-#import matplotlib.gridspec as gridspec
 import glob
 import numpy as np
 
@@ -77,13 +76,12 @@ labels = np.array(labels)
 print("{0} images with {1} classes".format(len(X), len(set(labels))))
 
 
-# perform one-hot encoding on the labels
 le = LabelEncoder()
 le.fit(labels)
 labels = le.transform(labels)
 y = to_categorical(labels)
 
-# save label file so we can use in another script
+
 np.save('classes.npy', le.classes_)
 
 (x_train, x_test, y_train, y_test) = train_test_split(X, y, test_size = 0.10, stratify = y, random_state = 24)
@@ -98,8 +96,7 @@ image_gen = ImageDataGenerator(rotation_range = 10,
                               fill_mode = "nearest"
                               )
 
-# tf.keras.applications.mobilenet_v2.preprocess_input(x_train)
-# tf.keras.applications.mobilenet_v2.preprocess_input(x_test)
+
 
 def create_model(hp, decay = 1e-4/25, training = True, output_shape = y.shape[1]):
   base = MobileNetV2(weights = 'imagenet',
@@ -111,7 +108,6 @@ def create_model(hp, decay = 1e-4/25, training = True, output_shape = y.shape[1]
   top = Flatten(name = "flatten")(top)
 
   hp_units = hp.Int('units', min_value=64, max_value=256, step=32)
-  # model.add(keras.layers.Dense(units=hp_units, activation='relu'))
 
   top = Dense(units=hp_units, activation='relu')(top)
   top = Dropout(0.5)(top)
@@ -133,24 +129,16 @@ tuner = kt.Hyperband(create_model,
                      objective='val_accuracy',
                      max_epochs=10,
                      factor=3)
-                    #  directory='my_dir',
-                    #  project_name='intro_to_kt')
 
-# decay = 1e-4/25
+
 EPOCHS = 30
-# model = create_model(decay = lr/EPOCHS, training = True)
+
 
 modelp_es = EarlyStopping(monitor = 'val_loss', patience = 5, verbose = 0)
-
-# modelp_checkpointer = [
-#                 EarlyStopping(monitor = 'val_loss', patience = 5, verbose = 0),
-#                 ModelCheckpoint(filepath = "License_char_plate_recog.h5", verbose = 1, save_weights_only = True)
-#                 ]
 
 
 tuner.search(x_train, y_train, epochs=EPOCHS, validation_data=(x_test, y_test), callbacks=[modelp_es])
 
-# Get the optimal hyperparameters
 best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
 
 print(f""" The optimal number of units is : {best_hps.get('units')} and the optimal learning rate for the optimizer
@@ -165,7 +153,7 @@ print('Best epoch: %d' % (best_epoch,))
 
 hypermodel = tuner.hypermodel.build(best_hps)
 modelp_checkpointer = ModelCheckpoint(filepath = "License_char_plate_recog.h5", verbose = 1, save_weights_only = True)
-# Retrain the model
+
 hypermodel.fit(x_train, y_train, epochs=best_epoch, validation_data=(x_test, y_test), callbacks=modelp_checkpointer)
 
 eval_result = hypermodel.evaluate(x_test, y_test)

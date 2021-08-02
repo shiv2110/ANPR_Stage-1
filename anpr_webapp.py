@@ -1,14 +1,9 @@
 import streamlit as st
 import numpy as np 
-# from os.path import splitext
-# from tensorflow.keras.models import load_model
-# import cv2
 import matplotlib.pyplot as plt
-# from tensorflow.python.framework.constant_op import _tensor_shape_tensor_conversion_function
-# from local_utils import detect_lp
 import numpy as np
 import matplotlib.pyplot as plt
-# import time
+
 
 import lp_detection
 import lp_char_seg
@@ -34,13 +29,6 @@ st.markdown(f""" <style>
         padding-bottom: {padding}rem;
     }} </style> """, unsafe_allow_html=True)
 
-
-# [theme]
-# primaryColor="#2214c7"
-# backgroundColor="#ffffff"
-# secondaryBackgroundColor="#e8eef9"
-# textColor="#000000"
-# font="sans serif"
 
 st.title('License Plate Recognition Model Test')
 
@@ -73,14 +61,7 @@ if uploaded_img:
         ax1.axis(False)
         ax1.imshow(LpImg[0])
         st.pyplot(fig1)
-    
 
-        # vehicle_image = lp_detection.draw_box(test_image, cor)
-        # st.subheader('Bounding Box for Number Plate')
-        # fig2, ax2 = plt.subplots()
-        # ax2.axis(False)
-        # ax2.imshow(vehicle_image)
-        # st.pyplot(fig2)
 
         plate, binary, dilated, blur, gray = lp_char_seg.plate_preprocessing(LpImg)
         cont = lp_char_seg.find_contours(binary)
@@ -100,8 +81,6 @@ if uploaded_img:
         text = lp_tesseract.OCR(blur)
         st.subheader('License Plate Number - Pytesseract Result')
         st.header(text)
-
-        # lp_tesseract.OCR(blur)
 
         st.write('Is the prediction wrong? Try tuning the parameters for a better result')
 

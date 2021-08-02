@@ -2,10 +2,6 @@ from tensorflow.keras.models import model_from_json
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
-# import tensorflow as tf
-
-# print("AHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAH ==" + tf.__version__)
-
 
 
 json_file = open('model/MobileNet_V2_char_recog_2.json', 'r')
