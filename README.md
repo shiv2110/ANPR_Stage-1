@@ -9,7 +9,7 @@ It involves three steps, namely :
 - ### Training the model with 36 classes 
     - The trained weights will be used later on for recognizing the number plate characters
 
-    - [Get the link to colab notebook 👉 (https://colab.research.google.com/drive/1KPih7z3xRJuOimmiLbohAs3vHHJy7oA4)]
+    - [Get the link to colab notebook 👉 (https://colab.research.google.com/drive/1KPih7z3xRJuOimmiLbohAs3vHHJy7oA4)] (Currently Unavailable)
 
     - MobileNetV2 has been used. '''include_top=False''', this way the fully connected layer will not be included and it can be custom added by us
 
